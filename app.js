@@ -2,6 +2,7 @@
 const searchSongs = async () => {
     const searchText = document.getElementById("inputValue").value;
     const url = `https://api.lyrics.ovh/suggest/${searchText}`;
+    toggleShow();
     try{
         const res = await fetch(url)
         const data = await res.json()
@@ -11,6 +12,13 @@ const searchSongs = async () => {
         displayError("Something went wrong! Please, check your spell & try again later.")
     }
 }
+
+// 'Enter' to use search button...
+inputValue.addEventListener("keypress", function(event) {
+    if (event.key === 'Enter'){
+       document.getElementById("searchBtn").click();
+    }
+});
 
 // Function : To display songs by searching...
 const displaySongs = songs => {
@@ -34,6 +42,7 @@ const displaySongs = songs => {
         </div>
         `
         songContainer.appendChild(songDiv);
+        toggleShow();
     });
 }
 
@@ -49,6 +58,7 @@ const getSongLyrics = async (artist, title) => {
         displayError('Sorry! I failed to load your lyrics.')
     }
 }
+
 // Function : To display song lyrics...
 const displayLyrics = lyrics => {
     const lyricsDiv = document.getElementById("lyricsDiv")
@@ -61,4 +71,17 @@ const displayError = error =>{
     document.getElementById("inputValue").value = '';
     const errorTag = document.getElementById('showError');
     errorTag.innerText = error;
+    toggleShow()
+}
+
+// Function : To display Spinner...
+const toggleShow = ()=>{
+    const spinner = document.getElementById("spinnerDiv");
+    spinner.classList.toggle('d-none');
+
+    const songs = document.getElementById('songContainer');
+    songs.classList.toggle('d-none');
+
+    const errorMessage = document.getElementById('showError');  
+    errorMessage.classList.toggle('d-none');
 }
